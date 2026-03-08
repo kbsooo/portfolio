@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>강병수 — Data/ML Portfolio</title>
+<style>
+/* ===== RESET & BASE ===== */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0a0a0b;
+  --surface:#111113;
+  --surface-2:#19191d;
+  --surface-3:#222228;
+  --border:#2a2a32;
+  --text:#e8e6e3;
+  --text-secondary:#9a9a9a;
+  --text-dim:#6a6a6a;
+  --accent:#4f8ff7;
+  --accent-dim:rgba(79,143,247,.12);
+  --gold:#d4a843;
+  --gold-dim:rgba(212,168,67,.12);
+  --red:#e05555;
+  --red-dim:rgba(224,85,85,.1);
+  --green:#44b87a;
+  --green-dim:rgba(68,184,122,.1);
+  --purple:#9f7aea;
+  --purple-dim:rgba(159,122,234,.1);
+  --font-sans:'Pretendard Variable','Pretendard',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+  --font-mono:'JetBrains Mono','SF Mono','Fira Code',monospace;
+  --max-w:820px;
+  --radius:10px;
+  --radius-sm:6px;
+}
+html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+body{font-family:var(--font-sans);background:var(--bg);color:var(--text);font-size:15.5px;line-height:1.72;overflow-x:hidden}
+::selection{background:var(--accent);color:#fff}
+a{color:var(--accent);text-decoration:none;transition:opacity .15s}
+a:hover{opacity:.8}
+
+/* ===== LAYOUT ===== */
+.page-wrap{max-width:var(--max-w);margin:0 auto;padding:0 24px}
+@media(max-width:640px){.page-wrap{padding:0 18px}}
+
+/* ===== HERO ===== */
+.hero{padding:80px 0 56px;border-bottom:1px solid var(--border)}
+@media(max-width:640px){.hero{padding:56px 0 40px}}
+.hero-eyebrow{font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+.hero h1{font-size:clamp(28px,5vw,42px);font-weight:800;line-height:1.18;letter-spacing:-.02em;margin-bottom:16px}
+.hero h1 .dim{color:var(--text-dim);font-weight:400}
+.hero-sub{font-size:17px;color:var(--text-secondary);line-height:1.7;max-width:600px}
+.hero-links{margin-top:24px;display:flex;flex-wrap:wrap;gap:10px}
+.hero-links a{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:500;padding:7px 14px;border:1px solid var(--border);border-radius:999px;color:var(--text-secondary);transition:all .2s}
+.hero-links a:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-dim);opacity:1}
+.hero-links a svg{width:14px;height:14px;flex-shrink:0}
+
+/* ===== NAV (sticky project nav) ===== */
+.project-nav{position:sticky;top:0;z-index:100;background:rgba(10,10,11,.82);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:0}
+.project-nav-inner{display:flex;gap:0;overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none}
+.project-nav-inner::-webkit-scrollbar{display:none}
+.project-nav a{flex-shrink:0;display:block;padding:14px 20px;font-size:13px;font-weight:500;color:var(--text-dim);border-bottom:2px solid transparent;transition:all .2s;white-space:nowrap}
+.project-nav a:hover{color:var(--text-secondary);opacity:1}
+.project-nav a.active{color:var(--accent);border-bottom-color:var(--accent)}
+@media(max-width:640px){.project-nav a{padding:12px 14px;font-size:12px}}
+
+/* ===== SECTION ===== */
+.project-section{padding:64px 0 48px;border-bottom:1px solid var(--border)}
+.project-section:last-of-type{border-bottom:none}
+@media(max-width:640px){.project-section{padding:48px 0 36px}}
+
+/* Section header */
+.section-header{margin-bottom:40px}
+.section-badge{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:5px 12px;border-radius:999px;margin-bottom:14px}
+.badge-gold{color:var(--gold);background:var(--gold-dim);border:1px solid rgba(212,168,67,.2)}
+.badge-blue{color:var(--accent);background:var(--accent-dim);border:1px solid rgba(79,143,247,.2)}
+.badge-green{color:var(--green);background:var(--green-dim);border:1px solid rgba(68,184,122,.2)}
+.badge-purple{color:var(--purple);background:var(--purple-dim);border:1px solid rgba(159,122,234,.2)}
+.section-header h2{font-size:clamp(22px,4vw,30px);font-weight:700;letter-spacing:-.015em;line-height:1.25;margin-bottom:8px}
+.section-meta{font-size:14px;color:var(--text-secondary);display:flex;flex-wrap:wrap;align-items:center;gap:6px 16px;margin-bottom:12px}
+.section-meta a{font-size:13px}
+.section-desc{font-size:15px;color:var(--text-secondary);line-height:1.75;max-width:640px}
+
+/* Tech stack pills */
+.tech-stack{display:flex;flex-wrap:wrap;gap:6px;margin-top:16px}
+.tech-pill{font-size:11.5px;font-weight:500;padding:4px 10px;border-radius:999px;background:var(--surface-2);color:var(--text-secondary);border:1px solid var(--border)}
+
+/* ===== CONTENT BLOCKS ===== */
+.content-block{margin-bottom:36px}
+.content-block:last-child{margin-bottom:0}
+.block-title{font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--text-dim);margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+
+/* Paragraphs inside content */
+.content-block p{font-size:15px;color:var(--text-secondary);line-height:1.78;margin-bottom:12px}
+.content-block p:last-child{margin-bottom:0}
+.content-block strong{color:var(--text);font-weight:600}
+
+/* Callout — insight */
+.callout{position:relative;margin:28px 0;padding:20px 24px;font-size:15px;line-height:1.75;border-radius:var(--radius)}
+.callout-blue{background:var(--accent-dim);color:var(--text)}
+.callout-blue strong{font-weight:700;font-size:15.5px}
+/* Callout — bug/warning (tag label) */
+.callout-red{background:var(--surface);border:1px solid rgba(224,85,85,.18)}
+.callout-red::before{content:'Bug';position:absolute;top:-9px;left:16px;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--red);background:var(--bg);padding:0 8px}
+/* Callout — note */
+.callout-gray{background:var(--surface-2);color:var(--text-secondary);font-size:14px}
+.callout strong{font-weight:700}
+.callout code{font-family:var(--font-mono);font-size:13px;background:rgba(255,255,255,.06);padding:1px 5px;border-radius:3px}
+
+/* Lists */
+.content-block ul,.content-block ol{padding-left:20px;margin-bottom:12px}
+.content-block li{font-size:14.5px;color:var(--text-secondary);line-height:1.72;margin-bottom:6px}
+.content-block li strong{color:var(--text)}
+.content-block li code{font-family:var(--font-mono);font-size:12.5px;background:var(--surface-2);padding:1px 5px;border-radius:3px;color:var(--accent)}
+
+/* Version timeline */
+.version-timeline{position:relative;padding-left:24px}
+.version-timeline::before{content:'';position:absolute;left:6px;top:8px;bottom:8px;width:1px;background:var(--border)}
+.version-entry{position:relative;margin-bottom:28px}
+.version-entry:last-child{margin-bottom:0}
+.version-entry::before{content:'';position:absolute;left:-20px;top:8px;width:9px;height:9px;border-radius:50%;background:var(--surface-3);border:2px solid var(--text-dim)}
+.version-entry.highlight::before{background:var(--accent);border-color:var(--accent)}
+.version-entry.fail::before{background:var(--red);border-color:var(--red)}
+.version-label{font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px}
+.version-label .score{color:var(--accent);font-family:var(--font-mono);font-weight:600}
+.version-label .fail-score{color:var(--red);font-family:var(--font-mono);font-weight:600}
+.version-body{font-size:14px;color:var(--text-secondary);line-height:1.72}
+.version-body ul{padding-left:18px;margin-top:6px}
+.version-body li{margin-bottom:4px;font-size:13.5px}
+.version-lesson{font-size:13px;color:var(--text-dim);margin-top:6px;font-style:italic}
+
+/* Comparison cards (e.g. vector vs graph) */
+.compare-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0}
+@media(max-width:520px){.compare-row{grid-template-columns:1fr;gap:10px}}
+.compare-card{padding:16px;border-radius:var(--radius);border:1px solid var(--border);background:var(--surface)}
+.compare-card.dim{opacity:.6}
+.compare-label{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px}
+.compare-card p{font-size:13.5px;color:var(--text-secondary);line-height:1.6;margin:0}
+
+/* Slang mapping table */
+.slang-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:14px 0}
+@media(max-width:480px){.slang-grid{grid-template-columns:1fr}}
+.slang-item{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:var(--radius-sm);background:var(--surface);border:1px solid var(--border);font-size:13px}
+.slang-term{font-weight:700;color:var(--text);white-space:nowrap;font-family:var(--font-mono);font-size:12.5px}
+.slang-arrow{color:var(--text-dim);flex-shrink:0}
+.slang-def{color:var(--text-secondary);font-size:12.5px}
+
+/* Node list (LangGraph) */
+.node-flow{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0}
+.node-chip{font-size:11px;font-family:var(--font-mono);padding:4px 8px;background:var(--surface-2);border:1px solid var(--border);border-radius:4px;color:var(--text-secondary)}
+
+/* Fine-tune strategy list */
+.strategy-list{margin:12px 0}
+.strategy-item{display:flex;gap:12px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:14px}
+.strategy-item:last-child{border-bottom:none}
+.strategy-tag{flex-shrink:0;font-family:var(--font-mono);font-size:12px;font-weight:600;color:var(--text-dim);min-width:60px}
+.strategy-tag.best{color:var(--green)}
+.strategy-desc{color:var(--text-secondary)}
+.strategy-desc strong{color:var(--text)}
+
+/* ===== TABLET IMAGE ===== */
+.tablet-img-row{display:grid;grid-template-columns:1fr 200px;gap:28px;align-items:start;margin-bottom:36px}
+@media(max-width:600px){.tablet-img-row{grid-template-columns:1fr;gap:16px}}
+.tablet-img-wrap{border-radius:var(--radius);overflow:hidden;line-height:0}
+.tablet-img-wrap img{width:100%;display:block;object-fit:cover;object-position:center top;max-height:280px}
+.tablet-img-caption{font-size:11.5px;color:var(--text-dim);margin-top:8px;line-height:1.5;font-style:italic}
+
+/* ===== CHART / DIAGRAM IMAGE ===== */
+.chart-img-wrap{margin:20px 0;border-radius:var(--radius);overflow:hidden;line-height:0;background:var(--surface-2);border:1px solid var(--border)}
+.chart-img-wrap img{width:100%;display:block;object-fit:contain}
+.chart-img-caption{font-size:12px;color:var(--text-dim);margin-top:8px;text-align:center;font-style:italic}
+
+/* ===== FOOTER ===== */
+.footer{padding:48px 0;text-align:center;border-top:1px solid var(--border)}
+.footer p{font-size:13px;color:var(--text-dim)}
+.footer a{color:var(--text-secondary)}
+
+/* ===== SAMPLE IMAGE ===== */
+.sample-img-wrap{position:relative;margin:20px 0;border-radius:var(--radius);overflow:hidden;line-height:0}
+.sample-img-wrap img{width:100%;display:block;object-fit:cover;filter:brightness(.72)}
+/* 좌우 반반 그라데이션 오버레이 */
+.sample-img-overlay{position:absolute;inset:0;background:linear-gradient(to right,rgba(0,0,0,.22) 0%,rgba(0,0,0,.08) 46%,rgba(0,0,0,.08) 54%,rgba(0,0,0,.22) 100%)}
+/* 중앙 분할선 */
+.sample-img-split{position:absolute;top:0;left:50%;bottom:0;width:2px;background:rgba(255,255,255,.9);box-shadow:0 0 8px rgba(255,255,255,.5)}
+/* 라벨 */
+.split-label{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);display:flex;align-items:stretch;gap:0;border-radius:6px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.5)}
+.split-label span{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:7px 16px;background:rgba(10,10,11,.75);backdrop-filter:blur(8px);color:rgba(255,255,255,.95);white-space:nowrap;line-height:1}
+.split-label span:first-child{border-right:1px solid rgba(255,255,255,.2)}
+.sample-img-caption{font-size:12px;color:var(--text-dim);margin-top:8px;text-align:center;font-style:italic}
+
+/* ===== SCROLL ANIMATIONS ===== */
+.fade-up{opacity:0;transform:translateY(20px);transition:opacity .5s ease,transform .5s ease}
+.fade-up.visible{opacity:1;transform:translateY(0)}
+
+/* ===== MOBILE REFINEMENTS ===== */
+@media(max-width:640px){
+  body{font-size:14.5px}
+  .callout{padding:14px 16px;font-size:13.5px}
+  .compare-card{padding:12px}
+}
+
+/* ===== PRINT ===== */
+@media print{
+  .project-nav{display:none}
+  .project-section{page-break-inside:avoid}
+  body{background:#fff;color:#111}
+}
+</style>
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+</head>
+<body>
+
+<!-- ===== HERO ===== -->
+<div class="page-wrap">
+<section class="hero fade-up">
+  <div class="hero-eyebrow">Portfolio — Data / ML Engineer</div>
+  <h1>강병수</h1>
+  <p class="hero-sub">이력서에 담지 못한 기술적 깊이를 정리한 프로젝트별 상세 포트폴리오입니다. 각 프로젝트에서 무엇을 시도했고, 왜 실패했고, 어떤 결정이 성능을 바꿨는지를 기록합니다.</p>
+  <div class="hero-links">
+    <a href="https://github.com/kbsooo" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+      GitHub
+    </a>
+    <a href="mailto:kbsoo0620@gmail.com">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+      Email
+    </a>
+  </div>
+</section>
+</div>
+
+<!-- ===== PROJECT NAV ===== -->
+<nav class="project-nav" id="projectNav">
+<div class="page-wrap">
+<div class="project-nav-inner">
+  <a href="#csiro" class="active">CSIRO</a>
+  <a href="#akkadian">Akkadian NMT</a>
+  <a href="#law-rag">Law RAG</a>
+  <a href="#finance">Finance Agent</a>
+</div>
+</div>
+</nav>
+
+<div class="page-wrap">
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- CSIRO -->
+<!-- ═══════════════════════════════════════════ -->
+<section class="project-section fade-up" id="csiro">
+<div class="section-header">
+  <div class="section-badge badge-gold">Silver Medal</div>
+  <h2>CSIRO — Image2Biomass Prediction</h2>
+  <div class="section-meta">
+    <span>181st / 3,802</span>
+    <span>·</span>
+    <span>2026.01</span>
+    <a href="https://github.com/kbsooo/CSIRO-Image2Biomass-Prediction" target="_blank">GitHub ↗</a>
+    <a href="https://www.kaggle.com/competitions/csiro-biomass" target="_blank">Kaggle ↗</a>
+  </div>
+  <p class="section-desc">초지(grassland) 이미지에서 식물 Biomass 양을 예측하는 회귀(Regression) 문제. Silver Medal을 수상했습니다.</p>
+</div>
+
+<div class="content-block">
+  <div class="block-title">문제 정의 — EDA에서 발견한 핵심 제약</div>
+  <p>가장 먼저 확인한 건 <strong>test set에 State, Species, NDVI, Height가 없다</strong>는 점이었습니다. 멀티모달로 설계하더라도 결국 inference는 image-only여야 했고, 이 제약이 이후 모든 설계 결정의 기준이 됐습니다.</p>
+  <p>추가로 Dry_Clover_g의 <strong>37.8%가 0</strong> — zero-inflated target이라 단순 MSE 학습만으로는 clover 예측이 무너질 수 있었습니다.</p>
+</div>
+
+<div class="content-block">
+  <div class="block-title">모델 진화</div>
+  <p>초기엔 EfficientNet-B0/B4로 baseline을 잡고, 이후 DINOv2, 최종적으로 <strong>DINOv3 ViT-Large</strong>를 주력 backbone으로 정착시켰습니다.</p>
+  <ul>
+    <li><strong>초기:</strong> EfficientNet-B0 / B4 — Baseline 및 초기 실험</li>
+    <li><strong>중반:</strong> DINOv2 — Self-supervised 전환 시도</li>
+    <li><strong>최종:</strong> DINOv3 ViT-Large — 주력 backbone</li>
+    <li><strong>비교:</strong> ConvNeXt-Base (cv5) — CNN 계열 앙상블용 다양성 확보</li>
+  </ul>
+</div>
+
+<div class="content-block">
+  <div class="block-title">대표 아키텍처 — DINOv3 Dual-View</div>
+  <p>긴 quadrat 이미지를 <strong>좌우로 반 분할</strong>해 DINOv3 ViT-Large에 각각 통과시키고, <strong>FiLM(Feature-wise Linear Modulation)</strong>으로 양쪽 context를 섞는 방식입니다. 이미지를 하나로 줄여 넣는 것보다 공간 구조를 보존할 수 있었고, self-supervised 표현력을 최대한 유지하면서 회귀 성능을 끌어올릴 수 있었습니다.</p>
+  <div class="sample-img-wrap">
+    <img src="img/CSIRO_sample.jpg" alt="Grassland quadrat sample — CSIRO biomass prediction" loading="lazy">
+    <div class="sample-img-overlay"></div>
+    <div class="sample-img-split"></div>
+    <div class="split-label">
+      <span>View L</span>
+      <span>View R</span>
+    </div>
+  </div>
+  <p class="sample-img-caption">실제 경진대회 데이터 샘플. 가로로 긴 quadrat 이미지를 중앙에서 좌/우로 분할해 각각 ViT-Large에 입력합니다.</p>
+</div>
+
+<div class="content-block">
+  <div class="block-title">Fine-tuning 전략 비교</div>
+  <div class="strategy-list">
+    <div class="strategy-item"><span class="strategy-tag">v22</span><span class="strategy-desc">Frozen backbone — head만 학습 (linear probe-like)</span></div>
+    <div class="strategy-item"><span class="strategy-tag">cv6</span><span class="strategy-desc">Frozen + SSF adapter — backbone 고정, adapter만 학습</span></div>
+    <div class="strategy-item"><span class="strategy-tag">cv8</span><span class="strategy-desc">Partial unfreeze + LLRD — 레이어별 LR decay</span></div>
+    <div class="strategy-item"><span class="strategy-tag best">cv7 ✓</span><span class="strategy-desc"><strong>Full fine-tune</strong> — backbone_lr_mult=0.084, pretrained weight 보호하며 전체 미세조정</span></div>
+    <div class="strategy-item"><span class="strategy-tag">v24</span><span class="strategy-desc">TENT-style — inference 중 LayerNorm만 업데이트</span></div>
+  </div>
+  <p>→ Full fine-tune + 작은 backbone LR이 최종 best. "완전 동결"은 도메인 특화 패턴을 못 잡고, "균일 LR"은 pretrained feature를 덮어썼습니다.</p>
+</div>
+
+<div class="content-block">
+  <div class="block-title">전처리 & 증강</div>
+  <p><strong>전처리</strong> — 이미지를 가로 중앙에서 좌우 반 분할 → Resize(512→560) → Dual-view 입력 → ImageNet Normalize</p>
+  <p><strong>증강</strong> — RandomHorizontalFlip, RandomVerticalFlip, ColorJitter (hue=<strong>0.02</strong>로 축소 — 크게 두면 초록/갈색 식생 색상 붕괴)</p>
+  <p><strong>TTA</strong> — Original + HFlip + VFlip (3x) / v24: TENT-style, augmentation 예측의 variance를 줄이는 방향으로 LayerNorm 업데이트</p>
+</div>
+
+<div class="content-block">
+  <div class="block-title">가장 큰 Breakthrough</div>
+  <p>v17에서 Optuna로 hyperparameter를 최적화했더니 CV 점수는 크게 올랐지만, LB와 gap이 벌어졌습니다. 분석 결과 <strong>"모델이 부족한 게 아니라 validation 설계에 leakage가 있었다"</strong>는 결론에 도달했습니다.</p>
+  <p><strong>Sampling_Date 그룹 기반 CV로 전환</strong> — 같은 날 촬영된 이미지들이 train/val에 섞이지 않도록 fold를 재구성했습니다.</p>
+  <div class="callout callout-blue"><strong>"더 좋은 모델"을 찾기 전에 "제대로 된 측정"이 먼저였습니다.</strong></div>
+</div>
+
+<div class="content-block">
+  <div class="block-title">cv7 — 최종 Refinement</div>
+  <ul>
+    <li><strong>Full-target weighted loss</strong> — 실제 평가 metric과 align된 loss로 학습</li>
+    <li><strong>OOF 저장 + Ridge calibration</strong> — 예측 분포를 보정해 test 시 안정성 향상</li>
+    <li><strong>Sampling_Date fold + OOF 체계</strong> — 실험 전반을 재현 가능하게 정리</li>
+  </ul>
+</div>
+
+<div class="content-block">
+  <div class="block-title">실패 사례 & 배운 것</div>
+  <ul>
+    <li><strong>CV3</strong> — bottom crop + timestamp 제거 → 오히려 성능 하락</li>
+    <li><strong>v13/v14</strong> — 강한 증강(TrivialAugmentWide, MixUp) → CV는 올랐지만 LB gap 증가</li>
+    <li><strong>v17 Optuna</strong> — "CV 착시"를 만든 주범. validation 설계가 모델 복잡도보다 중요</li>
+    <li><strong>v15 "Back to Basics"</strong> — 복잡한 실험이 안 먹힐 때 단순한 baseline의 가치</li>
+  </ul>
+  <p style="color:var(--text-dim);font-size:13px;margin-top:12px"><strong>시도한 것들</strong> — Physics constraints, Teacher-student distillation, Pseudo-labeling, Auxiliary task (NDVI/Height), Multi-backbone ensemble, Full-frame + SSF adapter, LLRD partial unfreeze, TENT inference adaptation</p>
+</div>
+</section>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- AKKADIAN -->
+<!-- ═══════════════════════════════════════════ -->
+<section class="project-section fade-up" id="akkadian">
+<div class="section-header">
+  <div class="section-badge badge-blue">진행중</div>
+  <h2>Translate Akkadian to English</h2>
+  <div class="section-meta">
+    <span>Best LB 25.1</span>
+    <span>·</span>
+    <span>2026.02 ~</span>
+    <a href="https://github.com/kbsooo/Akkadian-to-English" target="_blank">GitHub ↗</a>
+    <a href="https://www.kaggle.com/competitions/deep-past-challenge" target="_blank">Kaggle ↗</a>
+  </div>
+  <p class="section-desc">약 4,000년 전 점토판에 기록된 구 아시리아 방언(Old Assyrian) 아카드어 음역을 영어로 번역하는 Seq2Seq NMT 문제. 평가 지표는 <strong>Geometric Mean(BLEU-4, chrF++)</strong>입니다.</p>
+</div>
+
+<div class="content-block">
+  <div class="tablet-img-row">
+    <div>
+      <div class="block-title">왜 이 문제가 어려운가</div>
+      <ul>
+        <li><strong>초저자원(Ultra-low resource)</strong> — Gold 학습 데이터가 1,561쌍에 불과</li>
+        <li><strong>특수문자 범람</strong> — š, ṣ, ṭ, ḫ, ā 같은 diacritic, 첨자 숫자, OCR artifact → 서브워드 tokenizer에서 OOV 폭발</li>
+        <li><strong>Formulaic 패턴</strong> — 전체의 60~70%가 반복 공식구. <code>"um-ma X-ma a-na Y-ma"</code> → <code>"Thus says X, to Y:"</code></li>
+        <li><strong>문서-문장 불일치</strong> — 학습은 문서 단위, 테스트는 문장 단위 → domain gap</li>
+      </ul>
+    </div>
+    <div>
+      <div class="tablet-img-wrap">
+        <img src="img/old_tablet.jpg" alt="Old Assyrian cuneiform tablet" loading="lazy">
+      </div>
+      <p class="tablet-img-caption">약 4,000년 전 구 아시리아 점토판. 이 텍스트의 음역을 영어로 번역하는 것이 문제의 목표입니다.</p>
+    </div>
+  </div>
+</div>
+
+<div class="content-block">
+  <div class="block-title">왜 ByT5인가</div>
+  <p><strong>ByT5(Byte-level T5)</strong>를 선택한 가장 큰 이유는 byte-level 처리입니다. 아카드어 음역의 diacritic과 OCR artifact를 서브워드 vocab으로 처리하면 OOV가 폭발하지만, byte-level tokenizer는 어떤 문자도 1~3 byte로 안전하게 처리합니다.</p>
+  <div class="callout callout-gray"><strong>V4-ASCII 정규화</strong> — š→s, ṣ→s, ṭ→t, ḫ→h 등 diacritic을 완전 제거해 더 단순한 byte 시퀀스로 변환. 학습이 안정화됐습니다.</div>
+</div>
+
+<div class="content-block">
+  <div class="block-title">버전 진화 — 18번의 실험</div>
+  <div class="version-timeline">
+
+    <div class="version-entry fail">
+      <div class="version-label">V1 <span class="fail-score">→ LB 0.0</span> — 초기 실패, 기반 구축</div>
+      <div class="version-body">문서 레벨 vs 문장 레벨 도메인 갭으로 <code>!!!!</code> 반복 출력. 체크포인트 경로, 토크나이저 메타 불일치도 겹쳤습니다.</div>
+      <div class="version-lesson">→ 반드시 문장 레벨로 학습, 체크포인트 로딩 검증 필수</div>
+    </div>
+
+    <div class="version-entry highlight">
+      <div class="version-label">V2 <span class="score">→ LB 11.8</span> — 첫 유의미한 Breakthrough</div>
+      <div class="version-body">문서 단위를 <strong>문장 단위 문제로 재정의</strong>하고, V4-ASCII 정규화 도입. FP32 + LR=1e-4 + gradient clipping.</div>
+      <div class="version-lesson">→ 데이터 단위를 잘못 정의하면 모델이 아무리 좋아도 무의미</div>
+    </div>
+
+    <div class="version-entry highlight">
+      <div class="version-label">V7~V8 <span class="score">→ LB 22.9</span> — 데이터 확장</div>
+      <div class="version-body">
+        <ul>
+          <li><strong>First-word anchor 기법</strong> — Gold 1,561쌍 → <strong>7,234쌍</strong>으로 확장</li>
+          <li>ByT5-small → <strong>ByT5-base(581M)</strong> 스케일업</li>
+          <li>Gold 데이터 3× upsample + OCR noise augmentation</li>
+        </ul>
+      </div>
+      <div class="version-lesson">→ 더 큰 모델보다 더 많은 올바른 데이터가 먼저</div>
+    </div>
+
+    <div class="version-entry fail">
+      <div class="version-label">V9 <span class="fail-score">→ LB 13.2</span> — CAD 사전 추가 실패</div>
+      <div class="version-body">Chicago Assyrian Dictionary 7,133쌍 추가 → dictionary 스타일 출력에 편향. 문장 번역이 아닌 단어 번역만 출력.</div>
+      <div class="version-lesson">→ 데이터 양보다 도메인 일치가 중요. CAD 영구 금지.</div>
+    </div>
+
+    <div class="version-entry highlight">
+      <div class="version-label">V11 <span class="score">→ LB 25.1</span> — 현재 최고점</div>
+      <div class="version-body">
+        <ul>
+          <li><strong>학습 데이터 10,821행</strong> — new_segmented + Gold 3× + AICC pseudo-label + train_segmented</li>
+          <li><strong>TM(Translation Memory)</strong> — TF-IDF char 2-4gram, sim≥0.88이면 hard copy</li>
+          <li><strong>MBR 기초</strong> — ~10 후보 Scoring으로 최적 선택</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="version-entry">
+      <div class="version-label">V16~V17 <span class="score">→ LB 24.1 / 24.8</span> — MBR 고도화 시도</div>
+      <div class="version-body">Segment-Level TM(V16), Sampling+MBR 17후보(V17) — 후보 품질 하락과 "군중 심리" 문제로 V11을 넘지 못했습니다.</div>
+    </div>
+
+    <div class="version-entry fail">
+      <div class="version-label">V18 <span class="fail-score">→ LB 6.8</span> — TM Self-Reference 함정</div>
+      <div class="version-body">TM top-k가 C와 R 양쪽에 들어가며 <code>chrF=1.0 × 5×가중치</code>로 MBR 장악 → 독일어 출력. <strong>수정 완료:</strong> TM을 C에서 제거, R에만 유지.</div>
+    </div>
+  </div>
+  <div class="chart-img-wrap" style="margin-top:28px">
+    <img src="img/akkadian_lb.png" alt="Akkadian 버전별 LB 스코어 추이 차트" loading="lazy">
+  </div>
+  <p class="chart-img-caption">버전별 Leaderboard 스코어 추이 — V1(0.0) → V11(25.1). 주요 전환점마다 설계 결정이 성능을 바꿨습니다.</p>
+</div>
+
+<div class="content-block">
+  <div class="block-title">ByT5 shared embedding 버그</div>
+  <div class="callout callout-red"><strong>발견한 버그:</strong> <code>tie_word_embeddings=True</code>에서 <code>save_pretrained</code>이 <code>lm_head.weight</code>를 safetensors에 저장하지 않음 → 수동 <code>load_state_dict</code> 로딩 시 lm_head 랜덤 초기화 → EOS 즉시 출력. <strong>해결:</strong> <code>AutoModelForSeq2SeqLM.from_pretrained(local_files_only=True)</code> 강제.</div>
+</div>
+
+<div class="content-block">
+  <div class="block-title">발견한 기술 인사이트</div>
+  <ul>
+    <li><strong>MBR C/R 분리 원칙</strong> — Candidate(C)과 Reference(R)을 반드시 분리. sampling을 C에 넣으면 "다수결"로 TM을 무시하는 군중 심리 발생</li>
+    <li><strong>TM self-reference 함정</strong> — 같은 항목이 C와 R에 동시에 있으면 chrF=1.0 가중치 증폭으로 MBR 장악</li>
+    <li><strong>도메인 오염</strong> — CAD(V9), German 데이터(V18) — "데이터 추가가 독이 됐던" 사례. 도메인 일치 > 데이터 양</li>
+    <li><strong>BLEU vs chrF++ 불균형</strong> — chrF++≈42 준수하지만 BLEU≈12가 발목. BLEU 개선 = 정확한 n-gram = TM coverage 확대</li>
+  </ul>
+</div>
+
+<div class="content-block">
+  <div class="callout callout-blue"><strong>이 프로젝트의 병목은 모델 크기가 아니었습니다.</strong> 데이터 재구성(문서→문장), 정규화 일치(학습-추론), exact phrasing coverage(TM) — 이 세 가지가 성능을 결정했습니다. ByT5-large가 base보다 낮고, Gemma 4B가 ByT5-base보다 낮은 것이 그 증거입니다.</div>
+</div>
+
+<div class="content-block">
+  <div class="block-title">Diffusion LM 탐색 (진행중)</div>
+  <p>AR 방식의 한계("초반에 phrasing을 틀리면 끝까지 그대로")를 진단하고, <strong>MDLM(Masked Diffusion Language Model)</strong> 기반 ByT5 refinement를 탐색 중입니다. 파이프라인 구현이 상당히 진행됐으나, 성능 검증은 아직 진행 중입니다.</p>
+</div>
+</section>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- LAW RAG -->
+<!-- ═══════════════════════════════════════════ -->
+<section class="project-section fade-up" id="law-rag">
+<div class="section-header">
+  <div class="section-badge badge-green">GraphRAG</div>
+  <h2>Law RAG Agent</h2>
+  <div class="section-meta">
+    <span>KMMLU 37.0% (74/200)</span>
+  </div>
+  <p class="section-desc">형법 조문과 판례를 연결하는 그래프 기반 하이브리드 RAG 시스템. 단순 벡터 유사도를 넘어 법조문 간 인용/참조 관계를 retrieval signal로 활용합니다.</p>
+  <div class="tech-stack">
+    <span class="tech-pill">Neo4j</span>
+    <span class="tech-pill">text-embedding-3-small</span>
+    <span class="tech-pill">gpt-4o-mini</span>
+    <span class="tech-pill">PyPDFLoader</span>
+    <span class="tech-pill">AIHub</span>
+  </div>
+</div>
+
+<div class="content-block">
+  <div class="block-title">왜 이 문제를 만들었나</div>
+  <p>법률 QA에서 순수 벡터 검색은 <strong>"의미적으로 비슷한 문서"를 가져올 뿐, 법적으로 연결된 문서를 가져오지 못합니다.</strong></p>
+  <div class="compare-row">
+    <div class="compare-card dim">
+      <div class="compare-label" style="color:var(--text-dim)">벡터 검색</div>
+      <p>판례 92도2540(정당방위 관련 사례)이 top-1 — 간접적 참고 자료</p>
+    </div>
+    <div class="compare-card" style="border-color:var(--green)">
+      <div class="compare-label" style="color:var(--green)">그래프 검색</div>
+      <p>제21조(정당방위) 조문이 직접 surface — <strong>법적 정의의 출처</strong></p>
+    </div>
+  </div>
+</div>
+
+<div class="content-block">
+  <div class="block-title">데이터 구축 & Chunk Granularity</div>
+  <p><strong>형법 조문</strong> — 법제처 PDF → PyPDFLoader → <strong>361개 조문(Article 노드)</strong>. 초기 장(章) 단위(47개)에서 조문 단위(361개)로 전환했습니다.</p>
+  <ul>
+    <li><strong>장 단위(47)</strong> → 검색 결과가 너무 넓어 무관한 조문 포함</li>
+    <li><strong>조문 단위(361)</strong> → 법적 개념과 chunk 경계 일치 → 정확도 향상</li>
+  </ul>
+  <p><strong>판례</strong> — AIHub 5,404개 중 <strong>3,000건 샘플링</strong>해 Precedent 노드 구성.</p>
+</div>
+
+<div class="content-block">
+  <div class="block-title">그래프 스키마 — Neo4j</div>
+  <p>FAISS/Chroma 대신 <strong>Neo4j를 선택한 이유</strong>: 조문 간 인용 관계, 판례-조문 참조, 키워드를 엣지로 표현해야 했기 때문입니다.</p>
+  <ul>
+    <li><strong>노드:</strong> <code>Article</code> (형법 조문) · <code>Precedent</code> (판례) · <code>Keyword</code> (법률 핵심어)</li>
+    <li><strong>엣지:</strong> <code>REFERENCES_ARTICLE</code> (판례→조문) · <code>REFERENCES_CASE</code> (조문→판례) · <code>HAS_KEYWORD</code></li>
+  </ul>
+  <div class="chart-img-wrap" style="margin-top:20px">
+    <img src="img/law_graph.png" alt="Law RAG 그래프 스키마 다이어그램 — Neo4j" loading="lazy">
+  </div>
+  <p class="chart-img-caption">Neo4j 그래프 스키마. Article·Precedent·Keyword 노드와 인용/참조 엣지로 법률 구조를 표현합니다.</p>
+</div>
+
+<div class="content-block">
+  <div class="block-title">Hybrid GraphRAG — 4가지 검색 경로</div>
+  <ol>
+    <li><strong>Direct Article Lookup</strong> — 조문 번호 정규식 추출 → 직접 lookup</li>
+    <li><strong>Keyword Search</strong> — <code>HAS_KEYWORD</code> 엣지를 통한 개념 기반 검색</li>
+    <li><strong>Article Vector Search</strong> — 조문 embedding 기반 cosine similarity</li>
+    <li><strong>Precedent Vector + Graph Traversal</strong> — 판례 → <code>REFERENCES_ARTICLE</code> 엣지 → 조문 역추적</li>
+  </ol>
+  <p>각 경로의 결과를 점수 기반으로 통합해 최종 context를 구성하고, gpt-4o-mini에 전달합니다.</p>
+</div>
+
+<div class="content-block">
+  <div class="callout callout-blue"><strong>"semantic similarity보다 citation/reference가 더 강한 retrieval signal이었습니다."</strong><br>판례가 어떤 조문을 인용하는지, 조문이 어떤 사건에서 적용됐는지 — 이 구조적 연결이 의미 벡터보다 법률 QA에서 더 정확한 맥락을 제공했습니다.</div>
+</div>
+
+<div class="content-block">
+  <div class="block-title">한계 & 개선 방향</div>
+  <ul>
+    <li><strong>Relation 설정 미흡</strong> — 일부 인용 관계 누락으로 graph traversal coverage 제한</li>
+    <li><strong>파라미터 튜닝 부족</strong> — 4가지 경로 가중치를 휴리스틱으로 고정</li>
+  </ul>
+  <p><strong>개선 방향:</strong> Bayesian Optimization(가중치 자동 탐색), RAFT(법률 도메인 fine-tuning), NodeRAG(정교한 그래프 활용)</p>
+</div>
+</section>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- FINANCE AGENT -->
+<!-- ═══════════════════════════════════════════ -->
+<section class="project-section fade-up" id="finance">
+<div class="section-header">
+  <div class="section-badge badge-purple">AI Festival 본선</div>
+  <h2>Finance Agent</h2>
+  <div class="section-meta">
+    <span>미래에셋증권 × NAVER CLOUD</span>
+    <span>·</span>
+    <span>2025.07</span>
+    <a href="https://github.com/kbsooo/n-agent" target="_blank">GitHub ↗</a>
+  </div>
+  <p class="section-desc">LangGraph · LangChain 기반 국내 주식 정보 분석 AI 에이전트. HyperCLOVA X 파인튜닝 모델로 한국 투자 커뮤니티의 모호한 언어를 구조화된 질의로 번역합니다.</p>
+  <div class="tech-stack">
+    <span class="tech-pill">FastAPI</span>
+    <span class="tech-pill">LangGraph</span>
+    <span class="tech-pill">HyperCLOVA X</span>
+    <span class="tech-pill">yfinance</span>
+    <span class="tech-pill">FinanceDataReader</span>
+    <span class="tech-pill">pandas-ta</span>
+    <span class="tech-pill">Cloud Run</span>
+  </div>
+</div>
+
+<div class="content-block">
+  <div class="block-title">핵심 설계 철학</div>
+  <p>이 프로젝트의 핵심은 <strong>"LLM이 답을 직접 계산한다"가 아닙니다.</strong> 한국 주식 커뮤니티의 은어와 모호한 표현을 정량 조건으로 번역하는 데 LLM을 쓰고, 실제 계산은 deterministic Python 로직이 담당합니다.</p>
+  <div class="callout callout-blue"><strong>"LLM으로 은어를 '이해'했다"가 아니라, 은어를 실행 가능한 파라미터로 '번역'했습니다.</strong> 이 설계 덕분에 이후 단계는 재현 가능하고, LLM hallucination이 계산 결과에 개입할 여지가 없습니다.</div>
+</div>
+
+<div class="content-block">
+  <div class="block-title">시스템 아키텍처 — LangGraph State Machine</div>
+  <p><strong><code>analyze_intent</code> → 조건부 분기 → 분석 노드 → <code>generate_response</code></strong> 흐름의 라우터형 state machine입니다.</p>
+  <div class="node-flow">
+    <span class="node-chip">get_stock_price</span>
+    <span class="node-chip">get_top_volume_stocks</span>
+    <span class="node-chip">get_rsi_stocks</span>
+    <span class="node-chip">get_moving_average_break</span>
+    <span class="node-chip">get_bollinger_band_touch</span>
+    <span class="node-chip">get_volume_change_stocks</span>
+    <span class="node-chip">detect_moving_average_cross</span>
+    <span class="node-chip">get_stocks_by_criteria</span>
+    <span class="node-chip">get_market_index</span>
+    <span class="node-chip">get_daily_news</span>
+    <span class="node-chip">search_keyword_news</span>
+    <span class="node-chip">+3 more</span>
+  </div>
+  <p><strong>AgentState</strong>는 parsing 슬롯(<code>intent</code>, <code>ticker</code>, <code>rsi_threshold</code>, <code>band_type</code> 등)과 실행 결과 슬롯(<code>volume_top_stocks</code>, <code>market_index_value</code>, <code>final_answer</code> 등)으로 이원화했습니다.</p>
+</div>
+
+<div class="content-block">
+  <div class="block-title">HyperCLOVA X 파인튜닝 — Semantic Parser</div>
+  <p>한국 주식 자연어를 실행 가능한 라우팅 파라미터로 변환하는 <strong>semantic parser</strong>입니다. Instruction-style 데이터셋(<code>data.csv</code>)으로 학습했습니다. 의도 분석은 <strong>LLM + 규칙 보정 하이브리드</strong> — 날짜 보정, 골든/데드크로스 키워드, 회사 별칭(<code>삼전</code>, <code>하이닉스</code>, <code>엔솔</code>)까지 반영합니다.</p>
+
+  <div class="slang-grid">
+    <div class="slang-item"><span class="slang-term">떡상</span><span class="slang-arrow">→</span><span class="slang-def">등락률 +15% 이상</span></div>
+    <div class="slang-item"><span class="slang-term">동전주</span><span class="slang-arrow">→</span><span class="slang-def">현재가 1,000원 미만</span></div>
+    <div class="slang-item"><span class="slang-term">거래량 터짐</span><span class="slang-arrow">→</span><span class="slang-def">전일 대비 5배 이상</span></div>
+    <div class="slang-item"><span class="slang-term">쩜상</span><span class="slang-arrow">→</span><span class="slang-def">시가=고가=저가=상한가</span></div>
+    <div class="slang-item"><span class="slang-term">눌림목</span><span class="slang-arrow">→</span><span class="slang-def">5일선 아래 눌린 구간</span></div>
+    <div class="slang-item"><span class="slang-term">물타기</span><span class="slang-arrow">→</span><span class="slang-def">20%↓ 종목, 평단가 낮추기</span></div>
+    <div class="slang-item"><span class="slang-term">바닥 반등</span><span class="slang-arrow">→</span><span class="slang-def">저점 대비 5% 이상 상승</span></div>
+    <div class="slang-item"><span class="slang-term">설거지</span><span class="slang-arrow">→</span><span class="slang-def">고점 후 대량 장대 음봉</span></div>
+  </div>
+</div>
+
+<div class="content-block">
+  <div class="block-title">기술적 지표 — Deterministic Analyzer</div>
+  <p>모든 지표는 <strong><code>tools.py</code>에서 Python으로 계산</strong>한 뒤 결과만 포매팅합니다. LLM이 숫자를 만들어낼 여지를 차단하는 의도적 설계입니다.</p>
+  <ul>
+    <li><strong>RSI</strong> — <code>ta.rsi(length=16)</code> via FinanceDataReader</li>
+    <li><strong>이동평균 돌파</strong> — rolling mean 대비 10% 이상 높을 때 돌파 판정</li>
+    <li><strong>볼린저 밴드</strong> — 20일 이평 ± 2σ, 상단/하단 터치 분기</li>
+    <li><strong>골든/데드크로스</strong> — 5일/20일 rolling mean 교차 판정</li>
+    <li><strong>전 종목 스캔</strong> — <code>ThreadPoolExecutor</code> 병렬화</li>
+  </ul>
+</div>
+
+<div class="content-block">
+  <div class="block-title">데이터 소스</div>
+  <ul>
+    <li><strong>단일 종목/지수</strong> — yfinance (<code>.KS/.KQ</code>, <code>^KS11/^KQ11</code>)</li>
+    <li><strong>전 종목 스크리닝</strong> — FinanceDataReader</li>
+    <li><strong>기술적 지표</strong> — pandas-ta + pandas rolling</li>
+    <li><strong>뉴스</strong> — 네이버 금융 스크래핑 + 네이버 뉴스 검색 API</li>
+  </ul>
+  <p>On-demand snapshot 방식 — 질문 시점에 최신 가용 데이터를 조회합니다.</p>
+</div>
+
+<div class="content-block">
+  <div class="block-title">한계 — 파서와 Analyzer의 정합성</div>
+  <p>파인튜닝 데이터셋은 MACD, 스토캐스틱, ADX까지 포함하지만, 실행 로직은 일부 미구현. 또한 <code>generate_response_node</code>는 코드 기준으로 템플릿 포매팅입니다 — LLM이 숫자를 만들어낼 여지를 차단하는 <strong>의도적 설계</strong>이지만, 자연어 응답 생성으로 발전할 여지가 있습니다.</p>
+</div>
+</section>
+
+</div><!-- /page-wrap -->
+
+<!-- ===== FOOTER ===== -->
+<div class="page-wrap">
+<footer class="footer">
+  <p>&copy; 2026 강병수 · <a href="mailto:kbsoo0620@gmail.com">kbsoo0620@gmail.com</a></p>
+</footer>
+</div>
+
+<script>
+// ===== Intersection Observer for fade-up =====
+const io = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');io.unobserve(e.target)}})
+},{threshold:0.08});
+document.querySelectorAll('.fade-up').forEach(el=>io.observe(el));
+
+// ===== Active nav link on scroll =====
+const sections = document.querySelectorAll('.project-section');
+const navLinks = document.querySelectorAll('.project-nav a');
+const navBar = document.getElementById('projectNav');
+
+function updateNav(){
+  let current = '';
+  const offset = navBar ? navBar.offsetHeight + 20 : 80;
+  sections.forEach(sec=>{
+    const top = sec.offsetTop - offset;
+    if(window.scrollY >= top) current = sec.id;
+  });
+  navLinks.forEach(link=>{
+    link.classList.toggle('active', link.getAttribute('href') === '#' + current);
+  });
+}
+window.addEventListener('scroll', updateNav, {passive:true});
+updateNav();
+
+// ===== Smooth scroll for nav links =====
+navLinks.forEach(link=>{
+  link.addEventListener('click', e=>{
+    e.preventDefault();
+    const target = document.querySelector(link.getAttribute('href'));
+    if(target){
+      const offset = navBar ? navBar.offsetHeight : 0;
+      window.scrollTo({top: target.offsetTop - offset, behavior:'smooth'});
+    }
+  });
+});
+</script>
+</body>
+</html>
