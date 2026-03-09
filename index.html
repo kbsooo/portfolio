@@ -50,7 +50,11 @@ img,svg{max-width:100%;height:auto}
 .hero h1{font-size:clamp(28px,5vw,42px);font-weight:800;line-height:1.18;letter-spacing:-.02em;margin-bottom:16px}
 .hero h1 .dim{color:var(--text-dim);font-weight:400}
 .hero-sub{font-size:17px;color:var(--text-secondary);line-height:1.7;max-width:600px}
-.hero-links{margin-top:24px;display:flex;flex-wrap:wrap;gap:10px}
+.hero-status{display:inline-flex;align-items:center;gap:8px;margin-top:18px;padding:7px 14px;border-radius:999px;background:var(--green-dim);border:1px solid rgba(68,184,122,.2)}
+.status-dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 0 2px rgba(68,184,122,.25);flex-shrink:0}
+.status-text{font-size:13px;color:var(--text-secondary)}
+.status-text strong{color:var(--green);font-weight:600}
+.hero-links{margin-top:16px;display:flex;flex-wrap:wrap;gap:10px}
 .hero-links a{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:500;padding:7px 14px;border:1px solid var(--border);border-radius:999px;color:var(--text-secondary);transition:all .2s}
 .hero-links a:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-dim);opacity:1}
 .hero-links a svg{width:14px;height:14px;flex-shrink:0}
@@ -225,6 +229,10 @@ img,svg{max-width:100%;height:auto}
   <div class="hero-eyebrow">Portfolio — Data / ML Engineer</div>
   <h1>강병수</h1>
   <p class="hero-sub">이력서에 담지 못한 기술적 깊이를 정리한 프로젝트별 상세 포트폴리오입니다. 각 프로젝트에서 무엇을 시도했고, 왜 실패했고, 어떤 결정이 성능을 바꿨는지를 기록합니다.</p>
+  <div class="hero-status">
+    <span class="status-dot"></span>
+    <span class="status-text">4학년 1학기 재학 중 · 잔여 2학기 · 취업계 제출 시 입사 가능일 <strong>2026년 6월 23일</strong></span>
+  </div>
   <div class="hero-links">
     <a href="https://github.com/kbsooo" target="_blank" rel="noopener">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
